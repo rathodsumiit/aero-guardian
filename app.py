@@ -133,8 +133,8 @@ body {
     <div class="title">AERO GUARDIAN</div>
     <div class="subtitle">
         Autonomous Dual Drone System for Survivor Detection & Aid Delivery
-    <div class="subtitle">
-        By 
+    </div>
+    <div class="subtitle">By</div>
     <div class="subtitle">
         Nirmiti | Sumit | Onkar
     </div>
@@ -153,10 +153,8 @@ body {
     margin-top:30px;
 ">
 
-    <!-- CENTER RADAR -->
     <div class="radar"></div>
 
-    <!-- OPTIONAL DRONE BELOW RADAR -->
     <lottie-player 
         src="https://assets9.lottiefiles.com/packages/lf20_kkflmtur.json"
         style="width:140px;height:140px; margin-top:20px;"
@@ -164,7 +162,6 @@ body {
     </lottie-player>
 
 </div>
-
 
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 """)
@@ -177,13 +174,11 @@ body {
 
     upload = gr.Image(
         type="pil",
-        sources=["upload"],
         label="DRONE IMAGE INPUT"
     )
 
     live = gr.Image(
         type="pil",
-        sources=["webcam"],
         visible=False,
         label="LIVE CAMERA"
     )
@@ -201,10 +196,13 @@ body {
         )
 
     mode.change(switch, mode, [upload, live])
+
     scan.click(detect, upload, [output, log, counter])
-    live.change(detect, live, [output, log, counter])
+    scan.click(detect, live, [output, log, counter])
+
 
 demo.launch(
     server_name="0.0.0.0",
-    server_port=7860
+    server_port=7860,
+    show_api=False
 )
