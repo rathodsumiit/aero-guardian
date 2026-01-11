@@ -1,19 +1,21 @@
+import time
 import gradio as gr
 from ultralytics import YOLO
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 # ---------------- MODEL ----------------
 model = YOLO("best.pt")
 CONF = 0.3
 
-
 # ---------------- DETECTION ----------------
 def detect(image):
+    start = time.time()
+
     if image is None:
-        return None, "NO SIGNAL", "0"
+        return None, "NO SIGNAL", "0", "LOW", "0 FPS", "NORMAL", ""
 
     img = image.convert("RGB")
-    results = model.predict(img, conf=CONF)
+    results = model.predict(img, conf=CONF, verbose=False)
 
     draw = ImageDraw.Draw(img)
     logs = []
@@ -34,7 +36,8 @@ def detect(image):
             count += 1
             x1, y1, x2, y2 = map(int, box.xyxy[0])
 
-            draw.rectangle([x1, y1, x2, y2], outline="#00fff7", width=3)
+            pulse = int(2 + conf * 4)
+            draw.rectangle([x1, y1, x2, y2], outline="#00fff7", width=pulse)
             draw.text((x1, y1 - 14), f"HUMAN {conf:.2f}", fill="#00fff7")
 
             logs.append(f"> TARGET LOCKED | CONF={conf:.2f}")
@@ -42,14 +45,40 @@ def detect(image):
     if count == 0:
         logs.append("> AREA CLEAR")
 
-    return img, "\n".join(logs), str(count)
+    fps = 1 / max(time.time() - start, 0.001)
 
+    threat = "LOW"
+    if count >= 3:
+        threat = "HIGH"
+    elif count > 0:
+        threat = "MEDIUM"
+
+    radar_state = "ALERT" if count > 0 else "NORMAL"
+
+    alert_sound = ""
+    if count > 0:
+        alert_sound = """
+        <audio autoplay>
+            <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-tone-996.mp3" type="audio/mpeg">
+        </audio>
+        """
+
+    return (
+        img,
+        "\n".join(logs),
+        str(count),
+        threat,
+        f"{fps:.1f} FPS",
+        radar_state,
+        alert_sound
+    )
 
 # ---------------- UI ----------------
 with gr.Blocks() as demo:
 
-    gr.HTML("""
+    radar_html = gr.HTML("""
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
 body {
     background:
@@ -103,12 +132,24 @@ body {
 
 .radar {
     position: relative;
-    width:160px;
-    height:160px;
+    width:170px;
+    height:170px;
     border-radius:50%;
-    border:1px solid rgba(0,255,247,0.4);
+    border:2px solid rgba(0,255,247,0.4);
     box-shadow:0 0 30px rgba(0,255,247,0.4);
     background:radial-gradient(circle, rgba(0,255,247,0.15), transparent 70%);
+}
+
+.radar.alert {
+    box-shadow:0 0 45px red;
+    border-color:red;
+    animation:flash 0.8s infinite;
+}
+
+@keyframes flash {
+    0% {opacity:0.6;}
+    50% {opacity:1;}
+    100% {opacity:0.6;}
 }
 
 .radar::after {
@@ -131,13 +172,8 @@ body {
 
 <div class="hud">
     <div class="title">AERO GUARDIAN</div>
-    <div class="subtitle">
-        Autonomous Dual Drone System for Survivor Detection & Aid Delivery
-    </div>
-    <div class="subtitle">By</div>
-    <div class="subtitle">
-        Nirmiti | Sumit | Onkar
-    </div>
+    <div class="subtitle">Autonomous Dual Drone Survivor Detection</div>
+    <div class="subtitle">Nirmiti | Sumit | Onkar</div>
 
     <div class="status-bar">
         <div>System Status: <b>ONLINE</b></div>
@@ -145,25 +181,9 @@ body {
     </div>
 </div>
 
-<div style="
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    margin-top:30px;
-">
-
-    <div class="radar"></div>
-
-    <lottie-player 
-        src="https://assets9.lottiefiles.com/packages/lf20_kkflmtur.json"
-        style="width:140px;height:140px; margin-top:20px;"
-        loop autoplay>
-    </lottie-player>
-
+<div style="display:flex;flex-direction:column;align-items:center;margin-top:30px;">
+    <div class="radar" id="radar"></div>
 </div>
-
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 """)
 
     mode = gr.Radio(
@@ -172,20 +192,16 @@ body {
         label="INPUT MODE"
     )
 
-    upload = gr.Image(
-        type="pil",
-        label="DRONE IMAGE INPUT"
-    )
-
-    live = gr.Image(
-        type="pil",
-        visible=False,
-        label="LIVE CAMERA"
-    )
+    upload = gr.Image(type="pil", sources=["upload"], label="DRONE IMAGE INPUT")
+    live = gr.Image(type="pil", sources=["webcam"], visible=False, label="LIVE CAMERA")
 
     output = gr.Image(label="TARGET FEED")
     log = gr.Textbox(label="AI COMMAND LOG", lines=6)
     counter = gr.Textbox(label="SURVIVORS DETECTED")
+    threat = gr.Textbox(label="THREAT LEVEL")
+    fps = gr.Textbox(label="FPS")
+    radar_state = gr.Textbox(visible=False)
+    sound = gr.HTML()
 
     scan = gr.Button("🚨 INITIATE SCAN")
 
@@ -197,12 +213,19 @@ body {
 
     mode.change(switch, mode, [upload, live])
 
-    scan.click(detect, upload, [output, log, counter])
-    scan.click(detect, live, [output, log, counter])
+    scan.click(
+        detect,
+        upload,
+        [output, log, counter, threat, fps, radar_state, sound]
+    )
 
+    live.change(
+        detect,
+        live,
+        [output, log, counter, threat, fps, radar_state, sound]
+    )
 
 demo.launch(
     server_name="0.0.0.0",
-    server_port=7860,
-    show_api=False
+    server_port=7860
 )
