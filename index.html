@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SURVIVOR/PEOPLE DETECTION USING DRONE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="grid-background"></div>
+    <div class="stars"></div>
+
+    <section id="landing-page">
+        <div class="flying-drone-container delay-1">
+            <svg viewBox="0 0 100 100" class="drone-svg">
+                <g class="drone-body">
+                    <rect x="35" y="45" width="30" height="10" fill="#00fff7" opacity="0.8"/>
+                    <circle cx="25" cy="35" r="8" fill="none" stroke="#00fff7" stroke-width="2"/>
+                    <circle cx="75" cy="35" r="8" fill="none" stroke="#00fff7" stroke-width="2"/>
+                    <circle cx="25" cy="60" r="8" fill="none" stroke="#00fff7" stroke-width="2"/>
+                    <circle cx="75" cy="60" r="8" fill="none" stroke="#00fff7" stroke-width="2"/>
+                    <line x1="35" y1="50" x2="25" y2="35" stroke="#00fff7" stroke-width="1.5"/>
+                    <line x1="65" y1="50" x2="75" y2="35" stroke="#00fff7" stroke-width="1.5"/>
+                    <line x1="35" y1="50" x2="25" y2="60" stroke="#00fff7" stroke-width="1.5"/>
+                    <line x1="65" y1="50" x2="75" y2="60" stroke="#00fff7" stroke-width="1.5"/>
+                </g>
+            </svg>
+        </div>
+        <div class="flying-drone-container delay-2">
+            <svg viewBox="0 0 100 100" class="drone-svg">
+                <g class="drone-body">
+                    <rect x="35" y="45" width="30" height="10" fill="#ff0055" opacity="0.8"/> <circle cx="25" cy="35" r="8" fill="none" stroke="#ff0055" stroke-width="2"/>
+                    <circle cx="75" cy="35" r="8" fill="none" stroke="#ff0055" stroke-width="2"/>
+                    <circle cx="25" cy="60" r="8" fill="none" stroke="#ff0055" stroke-width="2"/>
+                    <circle cx="75" cy="60" r="8" fill="none" stroke="#ff0055" stroke-width="2"/>
+                    <line x1="35" y1="50" x2="25" y2="35" stroke="#ff0055" stroke-width="1.5"/>
+                    <line x1="65" y1="50" x2="75" y2="35" stroke="#ff0055" stroke-width="1.5"/>
+                    <line x1="35" y1="50" x2="25" y2="60" stroke="#ff0055" stroke-width="1.5"/>
+                    <line x1="65" y1="50" x2="75" y2="60" stroke="#ff0055" stroke-width="1.5"/>
+                </g>
+            </svg>
+        </div>
+
+        <div class="landing-content">
+            <h1 class="landing-title">AERO GUARDIAN</h1>
+            <p class="landing-subtitle">AUTONOMOUS SURVEILLANCE SYSTEM</p>
+            
+            <p class="landing-subtitle">Nirmiti | Sumit | Onkar</p>
+            
+            <div class="landing-options">
+                <div class="option-card" id="landingUploadBtn">
+                    <div class="icon">📤</div>
+                    <h2>UPLOAD IMAGE</h2>
+                    <p>Analyze static footage</p>
+                </div>
+                
+                <div class="option-card" id="landingCameraBtn">
+                    <div class="icon">📹</div>
+                    <h2>LIVE CAMERA</h2>
+                    <p>Real-time surveillance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="main-app" style="display: none;">
+        
+        <div class="drone-icon">
+            <svg width="80" height="80" viewBox="0 0 100 100">
+                <g class="drone-body">
+                    <rect x="35" y="45" width="30" height="10" fill="#00fff7" opacity="0.8"/>
+                    <circle cx="25" cy="35" r="8" fill="none" stroke="#00fff7" stroke-width="2"/>
+                    <circle cx="75" cy="35" r="8" fill="none" stroke="#00fff7" stroke-width="2"/>
+                    <circle cx="25" cy="60" r="8" fill="none" stroke="#00fff7" stroke-width="2"/>
+                    <circle cx="75" cy="60" r="8" fill="none" stroke="#00fff7" stroke-width="2"/>
+                    <line x1="35" y1="50" x2="25" y2="35" stroke="#00fff7" stroke-width="1.5"/>
+                    <line x1="65" y1="50" x2="75" y2="35" stroke="#00fff7" stroke-width="1.5"/>
+                    <line x1="35" y1="50" x2="25" y2="60" stroke="#00fff7" stroke-width="1.5"/>
+                    <line x1="65" y1="50" x2="75" y2="60" stroke="#00fff7" stroke-width="1.5"/>
+                </g>
+            </svg>
+        </div>
+
+        <header class="header">
+            <h1 class="title">AERO GUARDIAN</h1>
+            <p class="subtitle">Autonomous Dual Drone System For Survivors Detection and Aid Delivery</p>
+            <p class="team-names">NIRMITI | SUMIT | ONKAR</p>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="led"></span>
+                    <span>SYSTEM ONLINE</span>
+                </div>
+                <div class="status-item">
+                    <span>POWERED BY SR</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="panel left-panel">
+                <div class="panel-header">LIVE FEED / UPLOAD</div>
+                
+                <div class="mode-selector">
+                    <button class="mode-btn active" id="uploadModeBtn">
+                        📤 UPLOAD IMAGE
+                    </button>
+                    <button class="mode-btn" id="cameraModeBtn">
+                        📹 LIVE CAMERA
+                    </button>
+                </div>
+
+                <div class="upload-section" id="uploadSection">
+                    <div class="upload-area" id="uploadArea">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#00fff7" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>DROP IMAGE OR CLICK TO UPLOAD</p>
+                        <input type="file" id="imageInput" accept="image/*" hidden>
+                    </div>
+                    
+                    <div class="preview-container" id="previewContainer" style="display:none;">
+                        <img id="previewImage" alt="Preview">
+                        <button class="btn-remove" id="removeBtn">✕</button>
+                    </div>
+                </div>
+
+                <div class="camera-section" id="cameraSection" style="display:none;">
+                    <video id="cameraVideo" autoplay playsinline></video>
+                    <canvas id="cameraCanvas" style="display:none;"></canvas>
+                    <div class="camera-controls">
+                        <button class="btn-camera" id="startCameraBtn">
+                            📹 START CAMERA
+                        </button>
+                        <button class="btn-camera" id="stopCameraBtn" style="display:none;">
+                            ⏹️ STOP CAMERA
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn-scan" id="scanBtn" disabled>
+                    <span class="btn-icon">🚨</span>
+                    INITIATE SCAN
+                </button>
+
+                <div class="results-image" id="resultsImage" style="display:none;">
+                    <div class="panel-header">DETECTION RESULTS</div>
+                    <img id="annotatedImage" alt="Detection Results">
+                </div>
+            </div>
+
+            <div class="panel center-panel">
+                <div class="detection-circle-container">
+                    <div class="panel-header">DETECTION RESULTS</div>
+                    <div class="detection-circle" id="detectionCircle">
+                        <div class="count-display" id="countDisplay">0</div>
+                        <div class="scan-line"></div>
+                    </div>
+                    <div class="count-label">PERSON COUNT: <span id="personCount">0</span></div>
+                </div>
+
+                <div class="threat-indicator">
+                    <div class="threat-label">THREAT LEVEL</div>
+                    <div class="threat-value" id="threatValue">LOW</div>
+                    <div class="threat-bar">
+                        <div class="threat-fill" id="threatFill"></div>
+                    </div>
+                </div>
+
+                <div class="fps-counter">
+                    <span class="fps-label">FPS:</span>
+                    <span class="fps-value" id="fpsValue">0.0</span>
+                </div>
+            </div>
+
+            <div class="panel right-panel">
+                <div class="panel-header">DETECTION RESULTS</div>
+                <div class="log-container" id="logContainer">
+                    <div class="log-entry">› SYSTEM READY</div>
+                    <div class="log-entry">› AWAITING INPUT...</div>
+                </div>
+
+                <div class="detection-list" id="detectionList">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>ANALYZING...</p>
+    </div>
+
+    <audio id="alertSound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-tone-996.mp3"></audio>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
