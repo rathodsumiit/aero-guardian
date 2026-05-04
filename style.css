@@ -1,0 +1,749 @@
+/* ========================================= */
+/* GLOBAL & BACKGROUND (Shared)              */
+/* ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    background: #000;
+    color: #00fff7;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Animated Grid Background */
+.grid-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(0deg, rgba(0,255,247,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,247,0.03) 1px, transparent 1px),
+        radial-gradient(circle at center, #001a1f 0%, #000 100%);
+    background-size: 50px 50px, 50px 50px, cover;
+    z-index: -2;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% { background-position: 0 0, 0 0, center; }
+    100% { background-position: 50px 50px, 50px 50px, center; }
+}
+
+/* Animated Stars */
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.stars::before,
+.stars::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #00fff7;
+    box-shadow: 
+        100px 200px #00fff7, 300px 100px #00fff7, 500px 300px #00fff7,
+        700px 150px #00fff7, 900px 250px #00fff7, 1100px 100px #00fff7,
+        200px 400px #00fff7, 600px 500px #00fff7, 1000px 400px #00fff7,
+        400px 50px #00fff7, 800px 350px #00fff7, 1200px 200px #00fff7;
+    animation: twinkle 3s infinite;
+}
+
+.stars::after {
+    animation-delay: 1.5s;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* ========================================= */
+/* LANDING PAGE STYLES (New)                 */
+/* ========================================= */
+#landing-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000; /* On top of everything */
+    transition: opacity 0.8s ease-in-out;
+}
+
+/* Flying Drones Animation */
+.flying-drone-container {
+    position: absolute;
+    width: 100px;
+    opacity: 0.6;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.drone-svg {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 10px #00fff7);
+}
+
+.delay-1 {
+    top: 20%;
+    left: -150px;
+    animation: flyAcross1 15s linear infinite;
+}
+
+.delay-2 {
+    top: 70%;
+    right: -150px;
+    animation: flyAcross2 20s linear infinite; /* Reverse direction logic in keyframes */
+}
+
+@keyframes flyAcross1 {
+    0% { transform: translateX(0) translateY(0) rotate(5deg); left: -150px; }
+    50% { transform: translateX(50vw) translateY(50px) rotate(0deg); }
+    100% { transform: translateX(110vw) translateY(0) rotate(-5deg); left: 100%; }
+}
+
+@keyframes flyAcross2 {
+    0% { transform: translateX(0) translateY(0) rotate(-5deg); right: -150px; }
+    50% { transform: translateX(-50vw) translateY(-50px) rotate(0deg); }
+    100% { transform: translateX(-110vw) translateY(0) rotate(5deg); right: 100%; }
+}
+
+.landing-content {
+    text-align: center;
+    z-index: 2;
+}
+
+.landing-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    letter-spacing: 10px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 30px #00fff7, 0 0 60px #00fff7;
+    animation: titlePulse 3s infinite alternate;
+}
+
+.landing-subtitle {
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    opacity: 0.8;
+    margin-bottom: 60px;
+    color: #fff;
+}
+
+@keyframes titlePulse {
+    from { text-shadow: 0 0 20px #00fff7, 0 0 40px #00fff7; }
+    to { text-shadow: 0 0 40px #00fff7, 0 0 80px #00fff7; transform: scale(1.02); }
+}
+
+.landing-options {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+}
+
+.option-card {
+    background: rgba(0, 20, 30, 0.8);
+    border: 2px solid rgba(0, 255, 247, 0.3);
+    border-radius: 20px;
+    padding: 40px;
+    width: 250px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 255, 247, 0.1);
+}
+
+.option-card:hover {
+    transform: translateY(-15px) scale(1.05);
+    border-color: #00fff7;
+    background: rgba(0, 40, 60, 0.9);
+    box-shadow: 0 0 40px rgba(0, 255, 247, 0.4);
+}
+
+.option-card .icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.option-card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #00fff7;
+}
+
+.option-card p {
+    font-size: 0.8rem;
+    color: #aaa;
+    font-family: sans-serif;
+}
+
+/* ========================================= */
+/* MAIN APP STYLES (Existing + Tweaks)       */
+/* ========================================= */
+
+/* Drone Icon (Main App) */
+.drone-icon {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    animation: droneFly 4s ease-in-out infinite;
+}
+
+@keyframes droneFly {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-10px); }
+}
+
+.drone-body circle {
+    animation: propellerSpin 0.5s linear infinite;
+}
+
+@keyframes propellerSpin {
+    from { stroke-dasharray: 0 50; }
+    to { stroke-dasharray: 50 0; }
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 120px 20px 30px;
+}
+
+.title {
+    font-size: 2.5rem;
+    letter-spacing: 8px;
+    font-weight: 900;
+    text-shadow: 0 0 20px #00fff7, 0 0 40px #00fff7;
+    animation: titleGlow 2s ease-in-out infinite;
+    margin-bottom: 15px;
+}
+
+.subtitle {
+    font-size: 1rem;
+    letter-spacing: 2px;
+    opacity: 0.85;
+    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+.team-names {
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    opacity: 0.7;
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+@keyframes titleGlow {
+    0%, 100% { text-shadow: 0 0 20px #00fff7, 0 0 40px #00fff7; }
+    50% { text-shadow: 0 0 30px #00fff7, 0 0 60px #00fff7, 0 0 80px #00fff7; }
+}
+
+.status-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.led {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00ff6a;
+    box-shadow: 0 0 10px #00ff6a;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Container */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Panel */
+.panel {
+    background: rgba(0, 18, 30, 0.85);
+    border: 1px solid rgba(0, 255, 247, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 247, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.panel-header {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 255, 247, 0.3);
+    text-align: center;
+}
+
+/* Upload Section */
+.upload-section {
+    margin-bottom: 20px;
+}
+
+/* Mode Selector */
+.mode-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mode-btn {
+    flex: 1;
+    padding: 12px;
+    background: rgba(0, 255, 247, 0.1);
+    border: 1px solid rgba(0, 255, 247, 0.3);
+    border-radius: 8px;
+    color: #00fff7;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.mode-btn:hover {
+    background: rgba(0, 255, 247, 0.2);
+    border-color: #00fff7;
+}
+
+.mode-btn.active {
+    background: rgba(0, 255, 247, 0.3);
+    border-color: #00fff7;
+    box-shadow: 0 0 15px rgba(0, 255, 247, 0.5);
+}
+
+/* Camera Section */
+.camera-section {
+    margin-bottom: 20px;
+}
+
+#cameraVideo {
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid rgba(0, 255, 247, 0.4);
+    background: #000;
+}
+
+.camera-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-camera {
+    flex: 1;
+    padding: 12px;
+    background: rgba(0, 255, 247, 0.2);
+    border: 1px solid rgba(0, 255, 247, 0.4);
+    border-radius: 8px;
+    color: #00fff7;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-camera:hover {
+    background: rgba(0, 255, 247, 0.3);
+    border-color: #00fff7;
+    box-shadow: 0 0 15px rgba(0, 255, 247, 0.5);
+}
+
+.upload-area {
+    border: 2px dashed rgba(0, 255, 247, 0.4);
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.upload-area:hover {
+    border-color: #00fff7;
+    background: rgba(0, 255, 247, 0.05);
+}
+
+.upload-area svg {
+    margin-bottom: 15px;
+    animation: uploadBounce 2s ease-in-out infinite;
+}
+
+@keyframes uploadBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.upload-area p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.preview-container {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid rgba(0, 255, 247, 0.4);
+}
+
+.preview-container img {
+    width: 100%;
+    display: block;
+}
+
+.btn-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 0, 0, 0.8);
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+}
+
+.btn-remove:hover {
+    background: red;
+    transform: scale(1.1);
+}
+
+/* Scan Button */
+.btn-scan {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #00fff7, #00a8a8);
+    border: none;
+    border-radius: 10px;
+    color: #000;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 0 20px rgba(0, 255, 247, 0.5);
+}
+
+.btn-scan:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(0, 255, 247, 0.8);
+}
+
+.btn-scan:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-icon {
+    margin-right: 10px;
+}
+
+/* Results Image */
+.results-image {
+    margin-top: 20px;
+}
+
+.results-image img {
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid rgba(0, 255, 247, 0.4);
+}
+
+/* Detection Circle */
+.detection-circle-container {
+    text-align: center;
+}
+
+.detection-circle {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 30px auto;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 255, 247, 0.4);
+    box-shadow: 0 0 40px rgba(0, 255, 247, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(0, 255, 247, 0.1), transparent 70%);
+}
+
+.detection-circle.alert {
+    border-color: #ff0000;
+    box-shadow: 0 0 50px rgba(255, 0, 0, 0.6);
+    animation: alertFlash 0.8s infinite;
+}
+
+@keyframes alertFlash {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.count-display {
+    font-size: 5rem;
+    font-weight: 900;
+    text-shadow: 0 0 20px #00fff7;
+}
+
+.scan-line {
+    position: absolute;
+    width: 2px;
+    height: 50%;
+    background: linear-gradient(to bottom, transparent, #00fff7);
+    top: 50%;
+    left: 50%;
+    transform-origin: top;
+    animation: radarSweep 3s linear infinite;
+}
+
+@keyframes radarSweep {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.count-label {
+    font-size: 1.2rem;
+    margin-top: 20px;
+    letter-spacing: 2px;
+}
+
+.count-label span {
+    font-weight: 700;
+    color: #00fff7;
+}
+
+/* Threat Indicator */
+.threat-indicator {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.threat-label {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.threat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.threat-value.low { color: #00ff6a; }
+.threat-value.medium { color: #ffaa00; }
+.threat-value.high { color: #ff0000; }
+
+.threat-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(0, 255, 247, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 255, 247, 0.3);
+}
+
+.threat-fill {
+    height: 100%;
+    width: 0%;
+    transition: all 0.5s;
+    border-radius: 10px;
+}
+
+.threat-fill.low { background: #00ff6a; width: 33%; }
+.threat-fill.medium { background: #ffaa00; width: 66%; }
+.threat-fill.high { background: #ff0000; width: 100%; }
+
+/* FPS Counter */
+.fps-counter {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.fps-value {
+    font-weight: 700;
+    color: #00fff7;
+}
+
+/* Log Container */
+.log-container {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 255, 247, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    height: 300px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+.log-entry {
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0, 255, 247, 0.1);
+    animation: logFadeIn 0.3s;
+}
+
+@keyframes logFadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.log-entry:last-child {
+    border-bottom: none;
+}
+
+/* Detection List */
+.detection-list {
+    margin-top: 20px;
+}
+
+.detection-item {
+    background: rgba(0, 255, 247, 0.05);
+    border: 1px solid rgba(0, 255, 247, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: itemSlideIn 0.3s;
+}
+
+@keyframes itemSlideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.detection-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 255, 247, 0.3);
+}
+
+.detection-info {
+    flex: 1;
+}
+
+.detection-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.detection-conf {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.loading-overlay.active {
+    display: flex;
+}
+
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 4px solid rgba(0, 255, 247, 0.2);
+    border-top: 4px solid #00fff7;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.loading-overlay p {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 247, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 247, 0.8);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+    
+    .title {
+        font-size: 1.8rem;
+        letter-spacing: 4px;
+    }
+}
